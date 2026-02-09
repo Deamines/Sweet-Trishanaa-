@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Favorite Person</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe4f1 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Decorations */
+        .decorations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            color: rgba(255, 105, 180, 0.3);
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(10deg); }
+        }
+
+        /* Music Control */
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+        }
+
+        .music-icon {
+            font-size: 24px;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #d91e6e;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            color: #555;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        /* Celebration Section */
+        .celebration {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 240, 245, 0.9));
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .celebration-text {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Image Carousel */
+        .carousel {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .carousel-inner {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: #f0f0f0;
+        }
+
+        .carousel-item {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .carousel-item.active {
+            opacity: 1;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(217, 30, 110, 0.8);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10;
+            transition: background 0.3s;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(217, 30, 110, 1);
+        }
+
+        .carousel-btn.prev {
+            left: 10px;
+        }
+
+        .carousel-btn.next {
+            right: 10px;
+        }
+
+        /* Special Message Button */
+        .special-message-btn {
+            display: block;
+            margin: 30px auto;
+            padding: 15px 50px;
+            background: linear-gradient(135deg, #d91e6e, #ff6fa8);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(217, 30, 110, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .special-message-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(217, 30, 110, 0.6);
+        }
+
+        /* Surprises Section */
+        .surprises {
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .surprises h2 {
+            color: #d91e6e;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        .surprise-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .surprise-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+        }
+
+        .surprise-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
+        }
+
+        /* Countdown */
+        .countdown {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .countdown h3 {
+            color: #d91e6e;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .countdown-timer {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .time-value {
+            font-weight: bold;
+            font-size: 2em;
+            color: #d91e6e;
+        }
+
+        .time-label {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        /* Letter Overlay */
+        .letter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .letter-overlay.active {
+            display: flex;
+        }
+
+        .letter-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #d91e6e;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .letter-content h2 {
+            color: #d91e6e;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .letter-content p {
+            color: #333;
+            line-height: 1.8;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .celebration {
+                padding: 25px;
+            }
+
+            .carousel-inner {
+                height: 300px;
+            }
+
+            .surprise-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorations -->
+    <div class="decorations" id="decorations-container"></div>
+
+    <!-- Music Control -->
+    <div class="music-control" id="musicControl">
+        <span class="music-icon">🎵</span>
+    </div>
+
+    <!-- Hidden audio element -->
+    <audio id="backgroundMusic" loop>
+        <source src="romantic_song.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>For My Favorite Person, Trishana Kandel</h1>
+            <p>A new chapter begins, full of love, promises, and eternal moments.</p>
+        </div>
+
+        <!-- Celebration Section -->
+        <section class="celebration">
+            <div class="celebration-text">
+                Your "YES" has lit up my world, and I promise to fill our life with love, elegance, and infinite happiness.
+            </div>
+
+            <!-- Image Carousel -->
+            <div class="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="1770675405965_WhatsApp_Image_2026-02-10_at_03_39_41.jpeg" alt="Beautiful moment with mountain view">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="1770675385326_WhatsApp_Image_2026-02-10_at_03_38_23.jpeg" alt="Beautiful moment in the garden">
+                    </div>
+                </div>
+                <button class="carousel-btn prev" onclick="changeSlide(-1)">❮</button>
+                <button class="carousel-btn next" onclick="changeSlide(1)">❯</button>
+            </div>
+
+            <button class="special-message-btn" onclick="showLetter()">💌 SPECIAL MESSAGE FOR YOU!</button>
+        </section>
+
+        <!-- Countdown -->
+        <div class="countdown">
+            <h3>Days Together</h3>
+            <div class="countdown-timer" id="countdown">
+                <div class="time-unit">
+                    <span class="time-value" id="days">0</span>
+                    <span class="time-label">Days</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-value" id="hours">0</span>
+                    <span class="time-label">Hours</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-value" id="minutes">0</span>
+                    <span class="time-label">Minutes</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-value" id="seconds">0</span>
+                    <span class="time-label">Seconds</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Surprises Section -->
+        <section class="surprises">
+            <h2>Surprises for You</h2>
+            <div class="surprise-buttons">
+                <button class="surprise-btn" onclick="showSurprise('heart')">💖 HEART RAIN</button>
+                <button class="surprise-btn" onclick="showSurprise('star')">⭐ STAR HEART</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Forever yours, with all my love ❤️</p>
+        </div>
+    </div>
+
+    <!-- Letter Overlay -->
+    <div class="letter-overlay" id="letterOverlay">
+        <div class="letter-content">
+            <button class="close-btn" onclick="closeLetter()">×</button>
+            <h2>My Dearest Trishana,</h2>
+            <p>Every moment with you feels like a beautiful dream that I never want to end. Your smile brightens my darkest days, and your love gives me strength I never knew I had.</p>
+            <p>From the moment we met, I knew you were special. But as time passed, I realized you weren't just special – you became my everything. You are my best friend, my confidant, my inspiration, and my greatest love.</p>
+            <p>I promise to stand by your side through every adventure, to hold your hand through every challenge, and to celebrate every victory together. Our journey is just beginning, and I can't wait to create countless beautiful memories with you.</p>
+            <p>Thank you for saying yes to forever with me. You've made me the happiest person alive.</p>
+            <p style="text-align: right; margin-top: 30px; font-style: italic;">With all my heart,<br>Your forever partner</p>
+        </div>
+    </div>
+
+    <script>
+        // Carousel functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Auto-advance carousel
+        setInterval(() => {
+            changeSlide(1);
+        }, 4000);
+
+        // Music control
+        const musicControl = document.getElementById('musicControl');
+        const audio = document.getElementById('backgroundMusic');
+        let isPlaying = false;
+
+        musicControl.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                musicControl.innerHTML = '<span class="music-icon">🎵</span>';
+            } else {
+                audio.play();
+                musicControl.innerHTML = '<span class="music-icon">⏸️</span>';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // Create floating decorations
+        function createDecorations() {
+            const container = document.getElementById('decorations-container');
+            const decorations = ['❤️', '💕', '💖', '💗', '💝', '💞'];
+            
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = decorations[Math.floor(Math.random() * decorations.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 3 + 's';
+                heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+                container.appendChild(heart);
+            }
+        }
+
+        createDecorations();
+
+        // Countdown timer
+        function updateCountdown() {
+            // Set your special date here (year, month-1, day)
+            const specialDate = new Date('2024-01-01').getTime();
+            const now = new Date().getTime();
+            const distance = now - specialDate;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Letter overlay
+        function showLetter() {
+            document.getElementById('letterOverlay').classList.add('active');
+        }
+
+        function closeLetter() {
+            document.getElementById('letterOverlay').classList.remove('active');
+        }
+
+        // Surprises
+        function showSurprise(type) {
+            if (type === 'heart') {
+                createHeartRain();
+            } else if (type === 'star') {
+                alert('⭐ Star Heart surprise! ⭐\n\nYou are my shining star! ✨');
+            }
+        }
+
+        function createHeartRain() {
+            const hearts = ['❤️', '💕', '💖', '💗', '💝', '💞'];
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.position = 'fixed';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = '-50px';
+                    heart.style.fontSize = (20 + Math.random() * 30) + 'px';
+                    heart.style.zIndex = '9999';
+                    heart.style.pointerEvents = 'none';
+                    document.body.appendChild(heart);
+
+                    let pos = -50;
+                    const fall = setInterval(() => {
+                        pos += 5;
+                        heart.style.top = pos + 'px';
+                        if (pos > window.innerHeight) {
+                            clearInterval(fall);
+                            heart.remove();
+                        }
+                    }, 30);
+                }, i * 100);
+            }
+        }
+
+        // Close letter with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLetter();
+            }
+        });
+    </script>
+</body>
+</html>
